@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\CategoryProductModel;
 use App\CatePost;
 use App\Product;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 
@@ -32,7 +32,7 @@ class CategoryProduct extends Controller
         if ($admin_id) {
             return Redirect::to('dashboard');
         } else {
-            return Redirect::to('admin')->send();
+            return Redirect::to('login-auth')->send();
         }
     }
     public function arrange_category(Request $request)

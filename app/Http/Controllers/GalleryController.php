@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Gallery;
 use App\Http\Requests;
@@ -14,16 +14,16 @@ class GalleryController extends Controller
 {
      public function AuthLogin(){
         
-        if(Session::get('login_normal')){
+        if(Session()->get('login_normal')){
 
-            $admin_id = Session::get('admin_id');
+            $admin_id = Session()->get('admin_id');
         }else{
             $admin_id = Auth::id();
         }
             if($admin_id){
                 return Redirect::to('dashboard');
             }else{
-                return Redirect::to('admin')->send();
+                return Redirect::to('login-auth')->send();
             } 
         
        
@@ -55,7 +55,7 @@ class GalleryController extends Controller
 	           	$gallery->save();
     		}
     	}
-    	Session::put('message','Thêm thư viện ảnh thành công');
+    	Session()->put('message','Thêm thư viện ảnh thành công');
 	    return redirect()->back();
 
     }

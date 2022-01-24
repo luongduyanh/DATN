@@ -31,15 +31,13 @@ Route::get('/404', 'HomeController@error_page');
 Route::post('/tim-kiem', 'HomeController@search');
 Route::post('/autocomplete-ajax', 'HomeController@autocomplete_ajax');
 Route::post('/tim-kiem', 'HomeController@search');
-//Lien he trang 
 
+//Lien he trang 
 Route::get('/lien-he', 'ContactController@lien_he');
 Route::get('/information', 'ContactController@information');
 Route::get('/list-nut', 'ContactController@list_nut');
 Route::get('/delete-icons', 'ContactController@delete_icons');
-
 Route::get('/list-doitac', 'ContactController@list_doitac');
-
 Route::post('/add-doitac', 'ContactController@add_doitac');
 Route::post('/add-nut', 'ContactController@add_nut');
 Route::post('/save-info', 'ContactController@save_info');
@@ -70,13 +68,9 @@ Route::get('/bai-viet/{post_slug}', 'PostController@bai_viet');
 //
 Route::get('/admin', 'AdminController@index');
 Route::get('/dashboard', 'AdminController@show_dashboard');
-
 Route::post('/filter-by-date', 'AdminController@filter_by_date');
-
 Route::get('/order-date', 'AdminController@order_date');
-
 Route::post('/days-order', 'AdminController@days_order');
-
 Route::get('/logout', 'AdminController@logout');
 Route::post('/admin-dashboard', 'AdminController@dashboard');
 Route::post('/dashboard-filter', 'AdminController@dashboard_filter');
@@ -98,16 +92,6 @@ Route::get('/active-category-product/{category_product_id}', 'CategoryProduct@ac
 Route::post('/product-tabs', 'CategoryProduct@product_tabs');
 
 
-//Login facebook
-Route::get('/login-facebook', 'AdminController@login_facebook');
-Route::get('/admin/callback', 'AdminController@callback_facebook');
-
-Route::get('/login-facebook-customer', 'AdminController@login_facebook_customer');
-Route::get('/customer/facebook/callback', 'AdminController@callback_facebook_customer');
-
-//Login google
-Route::get('/login-google', 'AdminController@login_google');
-Route::get('/google/callback', 'AdminController@callback_google');
 
 //login customer by google
 Route::get('/login-customer-google', 'AdminController@login_customer_google');
@@ -148,21 +132,8 @@ Route::post('/update-post/{post_id}', 'PostController@update_post');
 
 
 //Product
-
 Route::get('/add-product', 'ProductController@add_product');
 Route::get('/edit-product/{product_id}', 'ProductController@edit_product');
-
-
-Route::get('users', 'UserController@index')->middleware('auth.roles');
-Route::get('add-users', 'UserController@add_users')->middleware('auth.roles');
-Route::get('delete-user-roles/{admin_id}', 'UserController@delete_user_roles')->middleware('auth.roles');
-Route::post('store-users', 'UserController@store_users');
-Route::post('assign-roles', 'UserController@assign_roles')->middleware('auth.roles');
-
-Route::get('impersonate/{admin_id}', 'UserController@impersonate');
-Route::get('impersonate-destroy', 'UserController@impersonate_destroy');
-
-
 Route::get('/delete-product/{product_id}', 'ProductController@delete_product');
 Route::get('/all-product', 'ProductController@all_product');
 Route::get('/unactive-product/{product_id}', 'ProductController@unactive_product');
@@ -174,12 +145,10 @@ Route::get('/gg-document', 'ProductController@gg_document');
 
 //Coupon
 Route::post('/check-coupon', 'CartController@check_coupon');
-
 Route::get('/unset-coupon', 'CouponController@unset_coupon');
 Route::get('/insert-coupon', 'CouponController@insert_coupon');
 Route::get('/delete-coupon/{coupon_id}', 'CouponController@delete_coupon');
 Route::get('/list-coupon', 'CouponController@list_coupon');
-
 Route::post('/insert-coupon-code', 'CouponController@insert_coupon_code');
 
 //Cart
@@ -273,23 +242,6 @@ Route::post('watch-video', 'VideoController@watch_video');
 
 
 
-//Document
-Route::get('upload_file', 'DocumentController@upload_file');
-Route::get('upload_image', 'DocumentController@upload_image');
-Route::get('upload_video', 'DocumentController@upload_video');
-Route::get('download_document/{path}/{name}', 'DocumentController@download_document');
-Route::get('create_document', 'DocumentController@create_document');
-Route::get('create_sub_dir', 'DocumentController@create_sub_dir');
-
-Route::get('delete_document/{path}', 'DocumentController@delete_document');
-
-//Folder
-Route::get('create_folder', 'DocumentController@create_folder');
-Route::get('rename_folder', 'DocumentController@rename_folder');
-Route::get('delete_folder', 'DocumentController@delete_folder');
-
-Route::get('list_document', 'DocumentController@list_document');
-Route::get('read_data', 'DocumentController@read_data');
 
 //Send Mail 
 Route::get('/send-coupon-vip/{coupon_time}/{coupon_condition}/{coupon_number}/{coupon_code}', 'MailController@send_coupon_vip');

@@ -23,7 +23,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <body>
 <div class="log-w3">
 <div class="w3layouts-main">
-	<h2>Đăng ký auth</h2>
+	<h2>Đăng ký admin</h2>
 	<?php
 	$message = Session()->get('message');
 	if($message){
@@ -57,12 +57,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			@endif --}}
 
 		</form>
-		<a href="{{url('/login-facebook')}}">Login Facebook</a> |
-		<a href="{{url('/login-google')}}">Login Google</a> |
-
-		<a href="{{url('/register-auth')}}">Đăng ký Auth</a> |
-		<a href="{{url('/login-auth')}}">Đăng nhập Auth</a>
-		{{-- <p>Don't Have an Account ?<a href="registration.html">Create an account</a></p> --}}
+		<a href="{{url('/register-auth')}}">Đăng ký</a> |
+		<a href="{{url('/login-auth')}}">Đăng nhập</a>
 </div>
 </div>
 <script src="{{asset('public/backend/js/bootstrap.js')}}"></script>

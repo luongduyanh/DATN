@@ -220,11 +220,8 @@
                                 </li>
 
                                 <li><a href="{{URL::to('/gio-hang')}}">{{__('lang.cart')}}
-
                                         <span class="show-cart"></span>
-
                                     </a>
-
                                 </li>
                                 <li><a href="{{URL::to('/video-shop')}}">{{__('lang.video')}}</a></li>
                                 <li><a href="{{URL::to('/lien-he')}}">{{__('lang.contact')}}</a></li>
@@ -1337,7 +1334,7 @@
             } else {
 
                 $.ajax({
-                    url: "{{url('/add-cart-ajax ')}}",
+                    url: "{{url('/add-cart-ajax')}}",
                     method: 'POST',
                     data: {
                         cart_product_id: cart_product_id,

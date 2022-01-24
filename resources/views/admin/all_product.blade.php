@@ -1,39 +1,19 @@
 @extends('admin_layout')
 @section('admin_content')
-    <div class="table-agile-info">
+<div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
       Liệt kê sản phẩm
     </div>
-   {{--  <div class="row w3-res-tb">
-      <div class="col-sm-5 m-b-xs">
-        <select class="input-sm form-control w-sm inline v-middle">
-          <option value="0">Bulk action</option>
-          <option value="1">Delete selected</option>
-          <option value="2">Bulk edit</option>
-          <option value="3">Export</option>
-        </select>
-        <button class="btn btn-sm btn-default">Apply</button>                
-      </div>
-      <div class="col-sm-4">
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group">
-          <input type="text" class="input-sm form-control" placeholder="Search">
-          <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Go!</button>
-          </span>
-        </div>
-      </div>
-    </div> --}}
+
     <div class="table-responsive">
-                      <?php
-                            $message = Session::get('message');
-                            if($message){
-                                echo '<span class="text-alert">'.$message.'</span>';
-                                Session::put('message',null);
-                            }
-                            ?>
+      <?php
+      $message = Session()->get('message');
+      if ($message) {
+        echo '<span class="text-alert">' . $message . '</span>';
+        Session()->put('message', null);
+      }
+      ?>
       <table class="table table-striped b-t b-light" id="myTable">
         <thead>
           <tr>
@@ -44,8 +24,6 @@
             </th>
             <th>Tên sản phẩm</th>
             <th>Thư viện ảnh</th>
-           
-            <th>Tài liệu</th>
             <th>Số lượng</th>
             <th>Slug</th>
             <th>Giá bán</th>
@@ -53,9 +31,9 @@
             <th>Hình sản phẩm</th>
             <th>Danh mục</th>
             <th>Thương hiệu</th>
-            
+
             <th>Hiển thị</th>
-            
+
             <th style="width:30px;"></th>
           </tr>
         </thead>
@@ -66,22 +44,6 @@
 
             <td>{{ $pro->product_name }}</td>
             <td><a href="{{url('/add-gallery/'.$pro->product_id)}}">Thêm thư viện ảnh</a></td>
-
-            @if($pro->product_file)
-              @php
-              $filename = $pro->product_file;
-              $name = pathinfo($filename, PATHINFO_FILENAME);
-              $extension = pathinfo($filename, PATHINFO_EXTENSION);
-              @endphp
-              @if($extension=='pdf')
-              <td><a target="_blank" href="{{asset('public/uploads/document/'.$pro->product_file)}}">Xem file</a></td>
-              @elseif($extension=='docx')
-              <td><a target="_blank" href="https://view.officeapps.live.com/op/view.aspx?src={{ url('public/uploads/document/'.$pro->product_file) }}">Xem file</a></td>
-              @endif
-            @else 
-            <td>Không file</td>
-            @endif
-
             <td>{{ $pro->product_quantity }}</td>
             <td>{{ $pro->product_slug }}</td>
             <td>{{ number_format($pro->product_price,0,',','.') }}đ</td>
@@ -91,19 +53,19 @@
             <td>{{ $pro->brand_name }}</td>
 
             <td><span class="text-ellipsis">
-              <?php
-               if($pro->product_status==0){
+                <?php
+                if ($pro->product_status == 0) {
                 ?>
-                <a href="{{URL::to('/unactive-product/'.$pro->product_id)}}"><span class="fa-thumb-styling fa fa-thumbs-up"></span></a>
+                  <a href="{{URL::to('/unactive-product/'.$pro->product_id)}}"><span class="fa-thumb-styling fa fa-thumbs-up"></span></a>
                 <?php
-                 }else{
-                ?>  
-                 <a href="{{URL::to('/active-product/'.$pro->product_id)}}"><span class="fa-thumb-styling fa fa-thumbs-down"></span></a>
+                } else {
+                ?>
+                  <a href="{{URL::to('/active-product/'.$pro->product_id)}}"><span class="fa-thumb-styling fa fa-thumbs-down"></span></a>
                 <?php
-               }
-              ?>
-            </span></td>
-           
+                }
+                ?>
+              </span></td>
+
             <td>
               <a href="{{URL::to('/edit-product/'.$pro->product_id)}}" class="active styling-edit" ui-toggle-class="">
                 <i class="fa fa-pencil-square-o text-success text-active"></i></a>
@@ -116,19 +78,6 @@
         </tbody>
       </table>
     </div>
-   {{--  <footer class="panel-footer">
-      <div class="row">
-        
-        <div class="col-sm-5 text-center">
-          <small class="text-muted inline m-t-sm m-b-sm">showing 20-30 of 50 items</small>
-        </div>
-        <div class="col-sm-7 text-right text-center-xs">                
-          <ul class="pagination pagination-sm m-t-none m-b-none">
-            {!!$all_product->links()!!}
-          </ul>
-        </div>
-      </div>
-    </footer> --}}
   </div>
 </div>
 @endsection

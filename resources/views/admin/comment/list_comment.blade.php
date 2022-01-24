@@ -8,10 +8,10 @@
     <div id="notify_comment"></div>
     <div class="table-responsive">
                       <?php
-                            $message = Session::get('message');
+                            $message = Session()->get('message');
                             if($message){
                                 echo '<span class="text-alert">'.$message.'</span>';
-                                Session::put('message',null);
+                                Session()->put('message',null);
                             }
                             ?>
       <table class="table table-striped b-t b-light" id="myTable">

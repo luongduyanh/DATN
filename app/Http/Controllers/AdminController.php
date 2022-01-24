@@ -27,166 +27,7 @@ use App\Rules\Captcha;
 class AdminController extends Controller
 {
 
-    public function findOrCreateUser($users, $provider)
-    {
-        $authUser = Social::where('provider_user_id', $users->id)->first();
-        if ($authUser) {
-            return $authUser;
-        } else {
-            $customer_new = new Social([
-                'provider_user_id' => $users->id,
-                'provider_user_email' => $users->email,
-                'provider' => strtoupper($provider)
-            ]);
 
-            $orang = Login::where('admin_email', $users->email)->first();
-
-            if (!$orang) {
-
-                $orang = Login::create([
-                    'admin_name' => $users->name,
-                    'admin_email' => $users->email,
-                    'admin_password' => '',
-                    'admin_phone' => '',
-                    'admin_status' => 1
-
-                ]);
-            }
-
-            $customer_new->login()->associate($orang);
-
-            $customer_new->save();
-            return $customer_new;
-        }
-    }
-
-    public function findOrCreateCustomer($users, $provider)
-    {
-        $authUser = SocialCustomers::where('provider_user_id', $users->id)->first();
-        if ($authUser) {
-            return $authUser;
-        } else {
-            $customer_new = new SocialCustomers([
-                'provider_user_id' => $users->id,
-                'provider_user_email' => $users->email,
-                'provider' => strtoupper($provider)
-            ]);
-
-            $customer = Customer::where('customer_email', $users->email)->first();
-
-            if (!$customer) {
-
-                $customer = Customer::create([
-                    'customer_name' => $users->name,
-                    'customer_picture' => $users->avatar,
-                    'customer_email' => $users->email,
-                    'customer_password' => '',
-                    'customer_phone' => ''
-                ]);
-            }
-
-            $customer_new->customer()->associate($customer);
-
-            $customer_new->save();
-            return $customer_new;
-        }
-    }
-    public function login_facebook_customer()
-    {
-        config(['services.facebook.redirect' => env('FACEBOOK_CLIENT_REDIRECT')]);
-        return Socialite::driver('facebook')->redirect();
-    }
-    public function callback_facebook_customer()
-    {
-        config(['services.facebook.redirect' => env('FACEBOOK_CLIENT_REDIRECT')]);
-        $provider = Socialite::driver('facebook')->user();
-
-        $account = SocialCustomers::where('provider', 'facebook')->where('provider_user_id', $provider->getId())->first();
-
-        if ($account != NULL) {
-
-            $account_name = Customer::where('customer_id', $account->user)->first();
-            Session()->put('customer_id', $account_name->customer_id);
-            Session()->put('customer_name', $account_name->customer_name);
-
-            return redirect('/dang-nhap')->with('message', 'Đăng nhập bằng tài khoản facebook <span style="color:red">' . $account_name->customer_email . '</span> thành công');
-        } elseif ($account == NULL) {
-            $customer_login = new SocialCustomers([
-                'provider_user_id' => $provider->getId(),
-                'provider_user_email' => $provider->getEmail(),
-                'provider' => 'facebook'
-            ]);
-
-            $customer = Customer::where('customer_email', $provider->getEmail())->first();
-
-            if (!$customer) {
-                $customer = Customer::create([
-                    'customer_name' => $provider->getName(),
-                    'customer_email' => $provider->getEmail(),
-                    'customer_picture' => '',
-                    'customer_password' => '',
-                    'customer_phone' => ''
-                ]);
-            }
-            $customer_login->customer()->associate($customer);
-            $customer_login->save();
-
-            $account_new = Customer::where('customer_id', $customer_login->user)->first();
-            Session()->put('customer_id', $account_new->customer_id);
-            Session()->put('customer_name', $account_new->customer_name);
-
-
-            return redirect('/dang-nhap')->with('message', 'Đăng nhập bằng tài khoản facebook <span style="color:red">' . $account_new->customer_email . '</span> thành công');
-        }
-    }
-    public function login_facebook()
-    {
-
-        return Socialite::driver('facebook')->redirect();
-    }
-
-    public function callback_facebook()
-    {
-
-        $provider = Socialite::driver('facebook')->user();
-        $account = Social::where('provider', 'facebook')->where('provider_user_id', $provider->getId())->first();
-
-        if ($account != NULL) {
-
-            $account_name = Login::where('admin_id', $account->user)->first();
-            Session()->put('admin_name', $account_name->admin_name);
-            Session()->put('login_normal', true);
-            Session()->put('admin_id', $account_name->admin_id);
-            return redirect('/dashboard')->with('message', 'Đăng nhập Admin thành công');
-        } elseif ($account == NULL) {
-
-            $admin_login = new Social([
-                'provider_user_id' => $provider->getId(),
-                'provider_user_email' => $provider->getEmail(),
-                'provider' => 'facebook'
-            ]);
-
-            $orang = Login::where('admin_email', $provider->getEmail())->first();
-
-            if (!$orang) {
-                $orang = Login::create([
-                    'admin_name' => $provider->getName(),
-                    'admin_email' => $provider->getEmail(),
-                    'admin_password' => '',
-                    'admin_phone' => ''
-
-                ]);
-            }
-            $admin_login->login()->associate($orang);
-            $admin_login->save();
-
-            $account_name = Login::where('admin_id', $admin_login->user)->first();
-            Session()->put('admin_name', $admin_login->admin_name);
-            Session()->put('login_normal', true);
-            Session()->put('admin_id', $admin_login->admin_id);
-            return redirect('/dashboard')->with('message', 'Đăng nhập Admin thành công');
-        }
-    }
 
     public function AuthLogin()
     {
@@ -200,7 +41,7 @@ class AdminController extends Controller
         if ($admin_id) {
             return Redirect::to('dashboard');
         } else {
-            return Redirect::to('admin')->send();
+            return Redirect::to('login-auth')->send();
         }
     }
 
@@ -295,17 +136,9 @@ class AdminController extends Controller
 
         $data = $request->all();
 
-        // $today = Carbon::now('Asia/Ho_Chi_Minh')->format('d-m-Y H:i:s');
-        // $tomorrow = Carbon::now('Asia/Ho_Chi_Minh')->addDay()->format('d-m-Y H:i:s');
-        // $lastWeek = Carbon::now('Asia/Ho_Chi_Minh')->subWeek()->format('d-m-Y H:i:s');
-        // $sub15days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(15)->format('d-m-Y H:i:s');
-        // $sub30days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(30)->format('d-m-Y H:i:s');
-
         $dauthangnay = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth()->toDateString();
         $dau_thangtruoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->startOfMonth()->toDateString();
         $cuoi_thangtruoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->endOfMonth()->toDateString();
-
-
 
         $sub7days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(7)->toDateString();
         $sub365days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(365)->toDateString();
@@ -399,7 +232,7 @@ class AdminController extends Controller
             }
         } else {
             Session()->put('message', 'Mật khẩu hoặc tài khoản bị sai.Làm ơn nhập lại');
-            return Redirect::to('/admin');
+            return Redirect::to('/login-auth');
         }
     }
     public function logout()
@@ -408,6 +241,6 @@ class AdminController extends Controller
         Session()->put('admin_name', null);
         Session()->put('admin_id', null);
         Session()->put('login_normal', null);
-        return Redirect::to('/admin');
+        return Redirect::to('/login-auth');
     }
 }
