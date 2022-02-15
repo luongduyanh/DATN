@@ -4,7 +4,7 @@
     <!--features_items-->
 
     @foreach($brand_name as $key => $name)
-
+    <h2></h2>
     <h2 class="title text-center">{{$name->brand_name}}</h2>
 
     @endforeach

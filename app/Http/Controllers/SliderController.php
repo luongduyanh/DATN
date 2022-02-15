@@ -28,7 +28,7 @@ class SliderController extends Controller
        
     }
     public function manage_slider(){
-    	$all_slide = Slider::orderBy('slider_id','DESC')->paginate(2);
+    	$all_slide = Slider::orderBy('slider_id','DESC')->paginate(5);
     	return view('admin.slider.list_slider')->with(compact('all_slide'));
     }
     public function add_slider(){
@@ -68,7 +68,7 @@ class SliderController extends Controller
             $slider->slider_status = $data['slider_status'];
             $slider->slider_desc = $data['slider_desc'];
            	$slider->save();
-            Session()->put('message','Thêm slider thành công');
+            Session()->put('message','Thêm banner thành công');
             return Redirect::to('add-slider');
         }else{
         	Session()->put('message','Làm ơn thêm hình ảnh');
@@ -79,7 +79,7 @@ class SliderController extends Controller
     public function delete_slide(Request $request, $slide_id){
         $slider = Slider::find($slide_id);
         $slider->delete();
-        Session()->put('message','Xóa slider thành công');
+        Session()->put('message','Xóa banner thành công');
         return redirect()->back();
 
     }

@@ -46,17 +46,12 @@ class CartController extends Controller
             }
             $output .= '</ul>';
         }
-        // elseif($cart==''){
-        //     $output.='<ul class="hover-cart">
-        //                                 <li><p>Giỏ hàng trống</p></li>
-        //                             </ul>'; 
-        // }
-
         echo $output;
     }
+
     public function check_coupon(Request $request)
     {
-        $today = Carbon::now('Asia/Ho_Chi_Minh')->format('d/m/Y');
+        $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y/m/d');
         $data = $request->all();
         if (Session()->get('customer_id')) {
             $coupon = Coupon::where('coupon_code', $data['coupon'])->where('coupon_status', 1)->where('coupon_date_end', '>=', $today)->where('coupon_used', 'LIKE', '%' . Session()->get('customer_id') . '%')->first();
@@ -140,8 +135,8 @@ class CartController extends Controller
         $slider = Slider::orderBy('slider_id', 'DESC')->where('slider_status', '1')->take(4)->get();
 
         $meta_desc = "Giỏ hàng của bạn";
-        $meta_keywords = "Giỏ hàng Ajax";
-        $meta_title = "Giỏ hàng Ajax";
+        $meta_keywords = "Giỏ hàng";
+        $meta_title = "Giỏ hàng";
         $url_canonical = $request->url();
         //--seo
         $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
@@ -422,6 +417,7 @@ class CartController extends Controller
         //Cart::destroy();
 
     }
+    
     public function show_cart(Request $request)
     {
         //seo 
@@ -434,6 +430,7 @@ class CartController extends Controller
         $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
         return view('pages.cart.show_cart')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical);
     }
+
     public function delete_to_cart($rowId)
     {
         Cart::update($rowId, 0);

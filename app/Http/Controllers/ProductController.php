@@ -345,6 +345,7 @@ class ProductController extends Controller
         return Redirect::to('all-product');
     }
     //End Admin Page
+    
     public function details_product($product_slug, Request $request)
     {
         //category post
@@ -393,35 +394,25 @@ class ProductController extends Controller
         $rating = round($rating);
         return view('pages.sanpham.show_details')->with('category', $cate_product)->with('brand', $brand_product)->with('product_details', $details_product)->with('relate', $related_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post)->with('gallery', $gallery)->with('product_cate', $product_cate)->with('cate_slug', $cate_slug)->with('rating', $rating)->with('share_images', $share_images);
     }
+
     public function tag(Request $request, $product_tag)
     {
-
         //category post
         $category_post = CatePost::orderBy('cate_post_id', 'DESC')->get();
         //slide
         $slider = Slider::orderBy('slider_id', 'DESC')->where('slider_status', '1')->take(4)->get();
-
         $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
-
-
         $tag = str_replace("-", " ", $product_tag);
-
-
-
         $pro_tag = Product::where('product_status', 0)->where('product_name', 'LIKE', '%' . $tag . '%')->orWhere('product_tags', 'LIKE', '%' . $tag . '%')->orWhere('product_slug', 'LIKE', '%' . $tag . '%')->get();
-
-
 
         $meta_desc = 'Tags tìm kiếm::' . $product_tag;
         $meta_keywords = 'Tags tìm kiếm:' . $product_tag;
         $meta_title = 'Tags tìm kiếm:' . $product_tag;
         $url_canonical = $request->url();
-
-
-
         return view('pages.sanpham.tag')->with('slider', $slider)->with('category_post', $category_post)->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('product_tag', $product_tag)->with('pro_tag', $pro_tag);
     }
+    
     public function insert_rating(Request $request)
     {
         $data = $request->all();

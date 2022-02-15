@@ -98,9 +98,7 @@ class CheckoutController extends Controller
     $data['email'][] = $customer->customer_email;
     //lay gio hang
     if (Session()->get('cart') == true) {
-
       foreach (Session()->get('cart') as $key => $cart_mail) {
-
         $cart_array[] = array(
           'product_name' => $cart_mail['product_name'],
           'product_price' => $cart_mail['product_price'],
@@ -279,18 +277,7 @@ class CheckoutController extends Controller
 
     return Redirect::to('/payment');
   }
-  public function payment(Request $request)
-  {
-    //seo 
-    $meta_desc = "Đăng nhập thanh toán";
-    $meta_keywords = "Đăng nhập thanh toán";
-    $meta_title = "Đăng nhập thanh toán";
-    $url_canonical = $request->url();
-    //--seo 
-    $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
-    $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
-    return view('pages.checkout.payment')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical);
-  }
+
   public function order_place(Request $request)
   {
     //insert payment_method
@@ -330,16 +317,14 @@ class CheckoutController extends Controller
       echo 'Thanh toán thẻ ATM';
     } elseif ($data['payment_method'] == 2) {
       Cart::destroy();
-
       $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
       $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
       return view('pages.checkout.handcash')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical);
     } else {
       echo 'Thẻ ghi nợ';
     }
-
-    //return Redirect::to('/payment');
   }
+
   public function logout_checkout()
   {
     Session()->forget('customer_id');
@@ -348,6 +333,7 @@ class CheckoutController extends Controller
 
     return Redirect::to('/dang-nhap');
   }
+
   public function login_customer(Request $request)
   {
 
@@ -360,15 +346,16 @@ class CheckoutController extends Controller
 
     if ($result) {
       Session()->put('customer_id', $result->customer_id);
+      Session()->put('customer_name', $result->customer_name);
       return Redirect::to('/checkout');
     } else {
       return Redirect::to('/dang-nhap');
     }
     Session()->save();
   }
+
   public function manage_order()
   {
-
     $this->AuthLogin();
     $all_order = DB::table('tbl_order')
       ->join('tbl_customers', 'tbl_order.customer_id', '=', 'tbl_customers.customer_id')

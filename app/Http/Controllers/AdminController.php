@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
-use DB;
-use Session;
-use App\Social;
-use App\SocialCustomers;
 use App\Login;
 use App\Product;
 use App\Video;
@@ -16,18 +11,12 @@ use App\Post;
 use App\Statistic;
 use App\Visitors;
 use Carbon\Carbon;
-
-use Auth;
 use App\Order;
-use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
-use Validator;
 use App\Rules\Captcha;
 
 class AdminController extends Controller
 {
-
-
 
     public function AuthLogin()
     {
@@ -47,7 +36,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin_login');
+        return view('admin.custom_auth.login_auth');
     }
 
     public function show_dashboard(Request $request)

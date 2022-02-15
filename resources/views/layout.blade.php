@@ -17,6 +17,8 @@
     <meta name="csrf-token" content="{{csrf_token()}}">
 
     <title>{{$meta_title}}</title>
+
+
     <link href="{{asset('public/frontend/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/prettyPhoto.css')}}" rel="stylesheet">
@@ -154,8 +156,7 @@
                                 ?>
                                     <li>
                                         <a href="{{URL::to('/logout-checkout')}}"><i class="fa fa-lock"></i> Đăng xuất</a>
-
-                                        <p> {{$customer_name}}</p>
+                                        <p>{{$customer_name}}</p>
                                     </li>
                                 <?php
                                 } else {
@@ -259,17 +260,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 padding-right">
-
                     @yield('content_category')
-
                 </div>
-
                 @yield('sidebar')
-
                 <div class="col-sm-9 padding-right">
-
                     @yield('content')
-
                 </div>
                 <style type="text/css">
                     h3.doitac {
@@ -398,8 +393,6 @@
     <script src="{{asset('public/frontend/js/price-range.js')}}"></script>
     <script src="{{asset('public/frontend/js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('public/frontend/js/main.js')}}"></script>
-
-
     <script src="{{asset('public/frontend/js/sweetalert.min.js')}}"></script>
     <script src="{{asset('public/frontend/js/lightgallery-all.min.js')}}"></script>
     <script src="{{asset('public/frontend/js/lightslider.js')}}"></script>
@@ -412,6 +405,39 @@
 
 
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+
+    <!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "114101827853059");
+        chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- Your SDK code -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                xfbml: true,
+                version: 'v12.0'
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <script type="text/javascript">
         function Huydonhang(id) {
@@ -437,9 +463,9 @@
             });
         }
     </script>
+
     <script type="text/javascript">
         load_more_product();
-
         cart_session();
 
         function cart_session() {
@@ -561,67 +587,7 @@
             }
         })
     </script>
-    <script>
-        var usd = document.getElementById("vnd_to_usd").value;
-        paypal.Button.render({
 
-            // Configure environment
-            env: 'sandbox',
-
-            client: {
-                sandbox: 'ARlkfQzdewaOAhhUSfoozgbU15syunmssa5ZPeZAL_4Rrk7GfQZ0QgMw1PTc8Md5nLS7VidD6_gGIRxx',
-                production: 'demo_production_client_id'
-            },
-            // Customize button (optional)
-            locale: 'en_US',
-            style: {
-                size: 'small',
-                color: 'gold',
-                shape: 'pill',
-            },
-
-            // Enable Pay Now checkout flow (optional)
-            commit: true,
-
-            // Set up a payment
-            payment: function(data, actions) {
-                return actions.payment.create({
-                    transactions: [{
-                        amount: {
-                            total: `${usd}`,
-                            currency: 'USD'
-                        }
-                    }]
-                });
-            },
-            // Execute the payment
-            onAuthorize: function(data, actions) {
-                return actions.payment.execute().then(function() {
-                    $.ajax({
-                        url: "{{url('/confirm-order')}}",
-                        method: 'POST',
-                        data: {
-                            shipping_email: "shipping_email",
-                            shipping_name: "shipping_name",
-                            shipping_address: "shipping_address",
-                            shipping_phone: "shipping_phone",
-                            shipping_notes: "shipping_notes",
-                            _token: _token,
-                            order_fee: "order_fee",
-                            order_coupon: "order_coupon",
-                            shipping_method: 1
-                        },
-                    });
-                    window.setTimeout(function() {
-                        window.location.href = "{{url('/history')}}";
-                    }, 3000);
-                    // Show a confirmation message to the buyer
-                    window.alert('Cảm ơn bạn đã mua hàng của chúng tôi!');
-
-                });
-            }
-        }, '#paypal-button');
-    </script>
     <div id="fb-root"></div>
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v6.0&appId=2339123679735877&autoLogAppEvents=1"></script>
@@ -664,14 +630,9 @@
 
     <script type="text/javascript">
         function viewed() {
-
-
             if (localStorage.getItem('viewed') != null) {
-
                 var data = JSON.parse(localStorage.getItem('viewed'));
-
                 data.reverse();
-
                 document.getElementById('row_viewed').style.overflow = 'scroll';
                 document.getElementById('row_viewed').style.height = '500px';
 
@@ -700,8 +661,6 @@
                 var url = document.getElementById('viewed_producturl' + id).value;
                 var price = document.getElementById('viewed_productprice' + id).value;
                 var image = document.getElementById('viewed_productimage' + id).value;
-
-
                 var newItem = {
                     'url': url,
                     'id': id,
@@ -713,33 +672,22 @@
                 if (localStorage.getItem('viewed') == null) {
                     localStorage.setItem('viewed', '[]');
                 }
-
                 var old_data = JSON.parse(localStorage.getItem('viewed'));
-
                 var matches = $.grep(old_data, function(obj) {
                     return obj.id == id;
                 })
-
                 if (matches.length) {
 
-
                 } else {
-
                     old_data.push(newItem);
-
                     $('#row_viewed').append('<div class="row" style="margin:10px 0"><div class="col-md-4"><img width="100%" src="' + newItem.image + '"></div><div class="col-md-8 info_wishlist"><p>' + newItem.name + '</p><p style="color:#FE980F">' + newItem.price + '</p><a href="' + newItem.url + '">Đặt hàng</a></div>');
 
                 }
-
                 localStorage.setItem('viewed', JSON.stringify(old_data));
             }
-
-
-
-
-
         }
     </script>
+
     <script type="text/javascript">
         function view() {
             if (localStorage.getItem('data') != null) {

@@ -8,7 +8,7 @@
 <div class="features_items">
     <!--features_items-->
     @foreach($category_name as $key => $name)
-
+    <h2></h2>
     <h2 class="title text-center">{{$name->category_name}}</h2>
     @endforeach
     <div class="row">
@@ -31,7 +31,7 @@
             </form>
 
         </div>
-
+        <!-- 
         <div class="col-md-4">
 
             <label for="amount">Lọc giá theo</label>
@@ -41,7 +41,7 @@
                 <style type="text/css">
                     .style-range p {
                         float: left;
-                        width: 25%;
+                        width: 200px;
                     }
                 </style>
                 <div class="style-range">
@@ -56,7 +56,7 @@
                 <input type="submit" name="filter_price" value="Lọc giá" class="btn btn-sm btn-default">
             </form>
 
-        </div>
+        </div> -->
     </div>
     @foreach($category_by_id as $key => $product)
     <a href="{{URL::to('/chi-tiet/'.$product->product_slug)}}">

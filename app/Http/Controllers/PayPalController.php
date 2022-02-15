@@ -3,65 +3,100 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Paypal;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PayPalController extends Controller
 {
-     /**
-     * Responds with a welcome message with instructions
-     *
-     * @return \Illuminate\Http\Response
-     */
-     public function payment()
-     {
-     	$data = [];
-     	$data['items'] = [
-     		[
-     			'name' => 'ItSolutionStuff.com',
-     			'price' => 100,
-     			'desc'  => 'Description for ItSolutionStuff.com',
-     			'qty' => 1
-     		]
-     	];
-
-     	$data['invoice_id'] = 1;
-     	$data['invoice_description'] = "Order #{$data['invoice_id']} Invoice";
-     	$data['return_url'] = route('payment.success');
-     	$data['cancel_url'] = route('payment.cancel');
-     	$data['total'] = 100;
-
-     	$provider = new ExpressCheckout;
-
-     	$response = $provider->setExpressCheckout($data);
-
-     	$response = $provider->setExpressCheckout($data, true);
-
-     	return redirect($response['paypal_link']);
-     }
-
     /**
-     * Responds with a welcome message with instructions
+     * create transaction.
      *
      * @return \Illuminate\Http\Response
      */
-    public function cancel()
+    public function createTransaction()
     {
-    	dd('Your payment is canceled. You can create cancel page here.');
+        return view('pages.checkout.show_checkout');
     }
 
     /**
-     * Responds with a welcome message with instructions
+     * process transaction.
      *
      * @return \Illuminate\Http\Response
      */
-    public function success(Request $request)
+    public function processTransaction(Request $request)
     {
-    	$response = $provider->getExpressCheckoutDetails($request->token);
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $paypalToken = $provider->getAccessToken();
+        $total = Session()->get('total_paypal');
 
-    	if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
-    		dd('Your payment was successfully. You can create success page here.');
-    	}
+        $response = $provider->createOrder([
+            "intent" => "CAPTURE",
+            "application_context" => [
+                "return_url" => route('successTransaction'),
+                "cancel_url" => route('cancelTransaction'),
+            ],
+            "purchase_units" => [
+                0 => [
+                    "amount" => [
+                        "currency_code" => "USD",
+                        "value" => $total,
+                    ]
+                ]
+            ]
+        ]);
 
-    	dd('Something is wrong.');
+        if (isset($response['id']) && $response['id'] != null) {
+
+            // redirect to approve href
+            foreach ($response['links'] as $links) {
+                if ($links['rel'] == 'approve') {
+                    return redirect()->away($links['href']);
+                }
+            }
+
+            return redirect()
+                ->route('createTransaction')
+                ->with('error', 'Something went wrong.');
+        } else {
+            return redirect()
+                ->route('createTransaction')
+                ->with('error', $response['message'] ?? 'Something went wrong.');
+        }
+    }
+
+    /**
+     * success transaction.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function successTransaction(Request $request)
+    {
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $provider->getAccessToken();
+        $response = $provider->capturePaymentOrder($request['token']);
+
+        if (isset($response['status']) && $response['status'] == 'COMPLETED') {
+            Session()->put('success_paypal', 1);
+            return redirect()
+                ->route('checkout')
+                ->with('success', 'Transaction complete.');
+        } else {
+            return redirect()
+                ->route('checkout')
+                ->with('error', $response['message'] ?? 'Something went wrong.');
+        }
+    }
+
+    /**
+     * cancel transaction.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelTransaction(Request $request)
+    {
+        return redirect()
+            ->route('checkout')
+            ->with('error', $response['message'] ?? 'You have canceled the transaction.');
     }
 }

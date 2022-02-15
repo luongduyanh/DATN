@@ -427,10 +427,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             form_data.append('file', image);
             form_data.append('name', name);
             form_data.append('link', link);
-
-
-
-
             $.ajax({
                 url: "{{url('/add-doitac')}}",
                 method: "POST",
@@ -445,12 +441,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 success: function(data) {
                     alert('Thêm đối tác thành công');
                     list_doitac();
-
-
                 }
             });
         })
     </script>
+
     <script type="text/javascript">
         $('.btn-delete-document').click(function() {
 
@@ -472,16 +467,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
             });
         });
     </script>
+
     <script type="text/javascript">
         $('.price_format').simpleMoneyFormat();
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-
             chart60daysorder();
-
             var chart = new Morris.Bar({
-
                 element: 'chart',
                 //option chart
                 lineColors: ['#819C79', '#fc8710', '#FF6541', '#A4ADD3', '#766B56'],
@@ -492,9 +485,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 labels: ['đơn hàng', 'doanh số', 'lợi nhuận', 'số lượng']
 
             });
-
-
-
             function chart60daysorder() {
                 var _token = $('input[name="_token"]').val();
                 $.ajax({
@@ -573,8 +563,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     '#4842f5'
 
                 ],
-                //labelColor:"#cccccc", // text color
-                //backgroundColor: '#333333', // border color
+
                 data: [{
                         label: "San pham",
                         value: <?php echo $app_product ?>

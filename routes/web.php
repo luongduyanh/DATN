@@ -21,6 +21,11 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+Route::get('create-transaction', 'PayPalController@createTransaction')->name('createTransaction');
+Route::get('process-transaction', 'PayPalController@processTransaction')->name('processTransaction');
+Route::get('success-transaction', 'PayPalController@successTransaction')->name('successTransaction');
+Route::get('cancel-transaction', 'PayPalController@cancelTransaction')->name('cancelTransaction');
+
 //Frontend 
 Route::get('/', 'HomeController@index');
 Route::post('/load-more-product', 'HomeController@load_more_product');
@@ -178,8 +183,8 @@ Route::get('/logout-checkout', 'CheckoutController@logout_checkout');
 Route::post('/add-customer', 'CheckoutController@add_customer');
 Route::post('/order-place', 'CheckoutController@order_place');
 Route::post('/login-customer', 'CheckoutController@login_customer');
-Route::get('/checkout', 'CheckoutController@checkout');
-Route::get('/payment', 'CheckoutController@payment');
+Route::get('/checkout', 'CheckoutController@checkout')->name('checkout');
+// Route::get('/payment', 'CheckoutController@payment');
 Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
 Route::post('/calculate-fee', 'CheckoutController@calculate_fee');
 Route::post('/select-delivery-home', 'CheckoutController@select_delivery_home');
@@ -244,7 +249,6 @@ Route::post('watch-video', 'VideoController@watch_video');
 
 
 //Send Mail 
-Route::get('/send-coupon-vip/{coupon_time}/{coupon_condition}/{coupon_number}/{coupon_code}', 'MailController@send_coupon_vip');
 Route::get('/send-coupon/{coupon_time}/{coupon_condition}/{coupon_number}/{coupon_code}', 'MailController@send_coupon');
 
 Route::get('/mail-example', 'MailController@mail_example');
