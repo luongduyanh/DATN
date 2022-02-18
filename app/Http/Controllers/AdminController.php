@@ -156,7 +156,6 @@ class AdminController extends Controller
 
 
         foreach ($get as $key => $val) {
-
             $chart_data[] = array(
                 'period' => $val->order_date,
                 'order' => $val->total_order,
@@ -166,8 +165,11 @@ class AdminController extends Controller
             );
         }
 
+
         echo $data = json_encode($chart_data);
     }
+
+    //lọc theo khoảng thời gian
     public function filter_by_date(Request $request)
     {
 

@@ -61,11 +61,8 @@
              <!--brands_products-->
              <h2>Sản phẩm đã xem</h2>
              <div class="brands-name ">
-
                  <div id="row_viewed" class="row">
-
                  </div>
-
              </div>
          </div>
          <!--/brands_products-->

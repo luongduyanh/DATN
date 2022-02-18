@@ -86,15 +86,10 @@ class CheckoutController extends Controller
       }
     }
 
-
-
     //send mail confirm
     $now = Carbon::now('Asia/Ho_Chi_Minh')->format('d-m-Y H:i:s');
-
     $title_mail = "Đơn hàng xác nhận ngày" . ' ' . $now;
-
     $customer = Customer::find(Session()->get('customer_id'));
-
     $data['email'][] = $customer->customer_email;
     //lay gio hang
     if (Session()->get('cart') == true) {
@@ -139,12 +134,15 @@ class CheckoutController extends Controller
     Session()->forget('fee');
     Session()->forget('cart');
   }
+
+  //xóa mã gg
   public function del_fee()
   {
     Session()->forget('fee');
     return redirect()->back();
   }
 
+  //check auth admin
   public function AuthLogin()
   {
     $admin_id = Session()->get('admin_id');
@@ -154,6 +152,8 @@ class CheckoutController extends Controller
       return Redirect::to('admin')->send();
     }
   }
+
+  //tính fee vận chuyển
   public function calculate_fee(Request $request)
   {
     $data = $request->all();
@@ -173,6 +173,8 @@ class CheckoutController extends Controller
       }
     }
   }
+
+
   public function select_delivery_home(Request $request)
   {
     $data = $request->all();
@@ -207,6 +209,8 @@ class CheckoutController extends Controller
     $manager_order_by_id  = view('admin.view_order')->with('order_by_id', $order_by_id);
     return view('admin_layout')->with('admin.view_order', $manager_order_by_id);
   }
+
+
   public function login_checkout(Request $request)
   {
     //category post
@@ -226,6 +230,8 @@ class CheckoutController extends Controller
 
     return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post);
   }
+
+  //khách hàng đăng kí
   public function add_customer(Request $request)
   {
 
@@ -240,8 +246,10 @@ class CheckoutController extends Controller
 
     Session()->put('customer_id', $customer_id);
     Session()->put('customer_name', $request->customer_name);
-    return Redirect::to('/checkout');
+    return Redirect::to('/trang-chu');
   }
+
+//khách hàng đăng nhập
   public function checkout(Request $request)
   {
     //category post
@@ -262,6 +270,8 @@ class CheckoutController extends Controller
 
     return view('pages.checkout.show_checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('city', $city)->with('slider', $slider)->with('category_post', $category_post);
   }
+
+
   public function save_checkout_customer(Request $request)
   {
     $data = array();

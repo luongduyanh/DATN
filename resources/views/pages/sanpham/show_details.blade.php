@@ -2,19 +2,11 @@
 @section('content')
 @foreach($product_details as $key => $value)
 
-
 <input type="hidden" id="product_viewed_id" value="{{$value->product_id}}">
-
-
-
 <input type="hidden" id="viewed_productname{{$value->product_id}}" value="{{$value->product_name}}">
 <input type="hidden" id="viewed_producturl{{$value->product_id}}" value="{{url('/chi-tiet/'.$value->product_slug)}}">
-
 <input type="hidden" id="viewed_productimage{{$value->product_id}}" value="{{asset('public/uploads/product/'.$value->product_image)}}">
 <input type="hidden" id="viewed_productprice{{$value->product_id}}" value="{{number_format($value->product_price,0,',','.')}}VNĐ">
-
-
-
 <div class="product-details">
 	<!--product-details-->
 	<style type="text/css">
@@ -67,7 +59,6 @@
 			<form action="{{URL::to('/add-cart-ajax')}}" method="POST">
 				@csrf
 
-
 				<input type="hidden" id="product_viewed_id" value="{{$value->product_id}}" class="cart_product_id_{{$value->product_id}}">
 
 				<input type="hidden" id="product_viewed{{$value->product_id}}" value="{{$value->product_name}}" class="cart_product_name_{{$value->product_id}}">
@@ -111,19 +102,14 @@
 			</style>
 			<fieldset>
 				<legend>Tags</legend>
-
 				<p><i class="fa fa-tag"></i>
 					@php
 					$tags = $value->product_tags;
 					$tags = explode(",",$tags);
-
 					@endphp
 					@foreach($tags as $tag)
 					<a href="{{url('/tag/'.str_slug($tag))}}" class="tags_style">{{$tag}}</a>
 					@endforeach
-
-
-
 				</p>
 			</fieldset>
 			<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
@@ -148,90 +134,72 @@
 			<p>{!!$value->product_desc!!}</p>
 
 		</div>
-
 		<div class="tab-pane fade" id="companyprofile">
 			<p>{!!$value->product_content!!}</p>
-
-
 		</div>
-
 		<div class="tab-pane fade active in" id="reviews">
-			<div class="col-sm-12">
-				<ul>
-					<li><a href=""><i class="fa fa-user"></i>Admin</a></li>
-					<li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
-					<li><a href=""><i class="fa fa-calendar-o"></i>16.09.2020</a></li>
-				</ul>
-				<style type="text/css">
-					.style_comment {
-						border: 1px solid #ddd;
-						border-radius: 10px;
-						background: #F0F0E9;
-					}
-				</style>
+			<?php
+			$customer_id = Session()->get('customer_id');
+			$customer_name = Session()->get('customer_name');
+			if ($customer_id == NULL) {
+			?>
+				<div class="col-sm-12">
+					<b>Đánh giá sản phẩm: <span style="font-size: 25px;">{{$rating}}</span> trên 5</b>
+				</div>
+				<div class="col-sm-12">
+					<a href="{{URL::to('/dang-nhap')}}"><i class="fa fa-lock"></i> Đăng nhập để đánh giá về sản phẩm</a>
+				</div>
+				<br>
+				<div class="col-sm-12">
+					<form>
+						@csrf
+						<input type="hidden" name="comment_product_id" class="comment_product_id" value="{{$value->product_id}}">
+						<div id="comment_show"></div>
+					</form>
+				<?php
+			} else {
+				?>
+					<div class="col-sm-12">
+						<b>Đánh giá sản phẩm: <span style="font-size: 25px;">{{$rating}}</span> trên 5</b>
+					</div>
+					<p><b>Đánh giá sản phẩm</b></p>
+					<!------Rating here---------->
+					<ul class="list-inline rating" title="Average Rating">
+						@for($count=1; $count<=5; $count++) @php if($count<=$rating){ $color='color:#ffcc00;' ; } else { $color='color:#ccc;' ; } @endphp <li title="star_rating" id="{{$value->product_id}}-{{$count}}" data-index="{{$count}}" data-product_id="{{$value->product_id}}" data-rating="{{$rating}}" class="rating" style="cursor:pointer; {{$color}} font-size:30px;">&#9733;</li>
+							@endfor
+					</ul>
+				<?php
+			}
+				?>
 				<form>
 					@csrf
-					<input type="hidden" name="comment_product_id" class="comment_product_id" value="{{$value->product_id}}">
-					<div id="comment_show"></div>
-
+					<input type="hidden" name="comment_product_id" value="{{$value->product_id}}" class="comment_product_id">
+					<div id="comment_show">
+						<!-- hiển thị các bình luận -->
+					</div>
 				</form>
-
-				<p><b>Viết đánh giá của bạn</b></p>
-
-				<!------Rating here---------->
-				<ul class="list-inline rating" title="Average Rating">
-					@for($count=1; $count<=5; $count++) @php if($count<=$rating){ $color='color:#ffcc00;' ; } else { $color='color:#ccc;' ; } @endphp <li title="star_rating" id="{{$value->product_id}}-{{$count}}" data-index="{{$count}}" data-product_id="{{$value->product_id}}" data-rating="{{$rating}}" class="rating" style="cursor:pointer; {{$color}} font-size:30px;">&#9733;</li>
-						@endfor
-
-				</ul>
-				{{-- <ul class="list-inline"  title="Average Rating">
-                                                	@for($count=1; $count<=5; $count++)
-                                                		@php
-	                                                		if($count<=$rating){
-	                                                			$color = 'color:#ffcc00;';
-	                                                		}
-	                                                		else {
-	                                                			$color = 'color:#ccc;';
-	                                                		}
-	                                                	
-                                                		@endphp
-                                                	  <li title="đánh giá sao" 
-                                                	  id="{{$value->product_id}}-{{$count}}"
-				data-index="{{$count}}"
-				data-product_id="{{$value->product_id}}"
-				data-rating="{{$rating}}"
-				class="rating"
-				style="cursor:pointer; {{$color}} font-size:30px;">
-				&#9733;
-				</li>
-				@endfor
-				</ul> --}}
-
-
+				<p><b>Bình luận sản phẩm</b></p>
 				<form action="#">
 					<span>
 						<input style="width:100%;margin-left: 0" type="text" class="comment_name" placeholder="Tên bình luận" />
-
 					</span>
 					<textarea name="comment" class="comment_content" placeholder="Nội dung bình luận"></textarea>
 					<div id="notify_comment"></div>
-
 					<button type="button" class="btn btn-default pull-right send-comment">
 						Gửi bình luận
 					</button>
-
+					<input type="hidden" name="comment_product_id" class="comment_product_id" value="{{$value->product_id}}">
 				</form>
-			</div>
+				</div>
 		</div>
-
 	</div>
 </div>
 <!--/category-tab-->
 @endforeach
 <div class="recommended_items">
 	<!--recommended_items-->
+	<br>
 	<h2 class="title text-center">Sản phẩm liên quan</h2>
-
 	<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 		<div class="carousel-inner">
 			<div class="item active">
@@ -240,27 +208,20 @@
 					<div class="product-image-wrapper">
 						<div class="single-products">
 							<div class="productinfo text-center product-related">
-								<img src="{{URL::to('public/uploads/product/'.$lienquan->product_image)}}" alt="" />
+								<a href="{{URL::to('/chi-tiet/'.$lienquan->product_slug)}}">
+									<img src="{{URL::to('public/uploads/product/'.$lienquan->product_image)}}" alt="" />
+								</a>
 								<h2>{{number_format($lienquan->product_price,0,',','.').' '.'VNĐ'}}</h2>
 								<p>{{$lienquan->product_name}}</p>
-
 							</div>
-
 						</div>
 					</div>
 				</div>
 				@endforeach
-
-
 			</div>
-
 		</div>
-
 	</div>
 </div>
 <!--/recommended_items-->
-{{-- <ul class="pagination pagination-sm m-t-none m-b-none">
-                       {!!$relate->links()!!}
-                      </ul> --}}
 
 @endsection

@@ -21,6 +21,7 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+//paypal payment
 Route::get('create-transaction', 'PayPalController@createTransaction')->name('createTransaction');
 Route::get('process-transaction', 'PayPalController@processTransaction')->name('processTransaction');
 Route::get('success-transaction', 'PayPalController@successTransaction')->name('successTransaction');
@@ -184,7 +185,6 @@ Route::post('/add-customer', 'CheckoutController@add_customer');
 Route::post('/order-place', 'CheckoutController@order_place');
 Route::post('/login-customer', 'CheckoutController@login_customer');
 Route::get('/checkout', 'CheckoutController@checkout')->name('checkout');
-// Route::get('/payment', 'CheckoutController@payment');
 Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
 Route::post('/calculate-fee', 'CheckoutController@calculate_fee');
 Route::post('/select-delivery-home', 'CheckoutController@select_delivery_home');
@@ -250,9 +250,7 @@ Route::post('watch-video', 'VideoController@watch_video');
 
 //Send Mail 
 Route::get('/send-coupon/{coupon_time}/{coupon_condition}/{coupon_number}/{coupon_code}', 'MailController@send_coupon');
-
 Route::get('/mail-example', 'MailController@mail_example');
-
 Route::get('/send-mail', 'MailController@send_mail');
 Route::get('/quen-mat-khau', 'MailController@quen_mat_khau');
 Route::get('/update-new-pass', 'MailController@update_new_pass');

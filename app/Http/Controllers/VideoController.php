@@ -16,9 +16,7 @@ class VideoController extends Controller
 {
 	public function AuthLogin()
 	{
-
 		if (Session()->get('login_normal')) {
-
 			$admin_id = Session()->get('admin_id');
 		} else {
 			$admin_id = Auth::id();
@@ -29,6 +27,7 @@ class VideoController extends Controller
 			return Redirect::to('admin')->send();
 		}
 	}
+
 	public function video()
 	{
 		return view('admin.video.list_video');
@@ -53,6 +52,7 @@ class VideoController extends Controller
 		}
 		$video->save();
 	}
+
 	public function delete_video(Request $request)
 	{
 		$data = $request->all();
@@ -64,6 +64,7 @@ class VideoController extends Controller
 
 		$video->delete();
 	}
+
 	public function update_video(Request $request)
 	{
 		$data = $request->all();
@@ -88,6 +89,7 @@ class VideoController extends Controller
 		}
 		$video->save();
 	}
+
 	public function update_video_image(Request $request)
 	{
 		$get_image = $request->file('file');
@@ -103,9 +105,9 @@ class VideoController extends Controller
 			$video->save();
 		}
 	}
+
 	public function select_video(Request $request)
 	{
-
 		$video = Video::orderBy('video_id', 'DESC')->get();
 		$video_count = $video->count();
 		$output = ' <form>
@@ -177,6 +179,7 @@ class VideoController extends Controller
     			';
 		echo $output;
 	}
+
 	public function video_shop(Request $request)
 	{
 		//category post
@@ -185,7 +188,7 @@ class VideoController extends Controller
 		//slide
 		$slider = Slider::orderBy('slider_id', 'DESC')->where('slider_status', '1')->take(4)->get();
 		//seo 
-		$meta_desc = "Video công ty TNHH một thành viên hiếushop";
+		$meta_desc = "Video công ty TNHH một thành viên";
 		$meta_keywords = "thiết bị chơi game,thiet bi choi game";
 		$meta_title = "Videos HiếuShop";
 		$url_canonical = $request->url();
@@ -193,17 +196,11 @@ class VideoController extends Controller
 
 		$cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
 		$brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
-
-		// $all_product = DB::table('tbl_product')
-		// ->join('tbl_category_product','tbl_category_product.category_id','=','tbl_product.category_id')
-		// ->join('tbl_brand','tbl_brand.brand_id','=','tbl_product.brand_id')
-		// ->orderby('tbl_product.product_id','desc')->get();
-
 		$all_video = DB::table('tbl_videos')->paginate(6);
-
 		return view('pages.video.video')->with('category', $cate_product)->with('brand', $brand_product)->with('all_video', $all_video)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post); //1
 		// return view('pages.home')->with(compact('cate_product','brand_product','all_product')); //2
 
+		
 	}
 	public function watch_video(Request $request)
 	{

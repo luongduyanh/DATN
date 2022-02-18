@@ -88,7 +88,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="logo pull-left">
-                            <a href="{{URL::to('/trang-chu')}}"><img src="{{('public/frontend/images/logo.png')}}" alt="" /></a>
+                            <a href="{{URL::to('/trang-chu')}}"><img style="height: 60px" src="{{('public/uploads/contact/thiet-ke-logo-nha-sach44.png')}}" alt="" /></a>
                         </div>
                         <div class="btn-group pull-right">
                         </div>
@@ -234,9 +234,8 @@
                             {{csrf_field()}}
                             <div class="search_box">
 
-                                <input type="text" style="width: 60%;margin-right: 5px" name="keywords_submit" id="keywords" placeholder="Tìm kiếm sản phẩm" />
+                                <input type="text" style="width: 60%;margin-right: 5px;color:#FFF" name="keywords_submit" id="keywords" placeholder="Tìm kiếm sản phẩm" />
                                 <div id="search_ajax"></div>
-
                                 <input type="submit" style="margin-top:0;color:#666" name="search_items" class="btn btn-primary btn-sm" value="Tìm kiếm">
 
                             </div>
@@ -247,7 +246,6 @@
             </div>
         </div>
         <!--/header-bottom-->
-
     </header>
     <!--/header-->
 

@@ -7,7 +7,7 @@
 @section('content')
 <div class="features_items">
   <!--features_items-->
-
+  <br>
   <h2 class="title text-center">Videos công ty</h2>
 
   @foreach($all_video as $key => $video)

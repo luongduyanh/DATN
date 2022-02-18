@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/tutorial_youtube/shopbanhanglaravel'),
+    'url' => env('APP_URL', 'http://localhost/datn'),
 
     'asset_url' => env('ASSET_URL', null),
 

@@ -5,38 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Admin;
-use App\Roles;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function register_auth()
-    {
-        return view('admin.custom_auth.register');
-    }
-    public function login_auth()
-    {
-        return view('admin.custom_auth.login_auth');
-    }
-    public function logout_auth()
-    {
-        Auth::logout();
-        return redirect('/login-auth')->with('message', 'Đã đăng xuất');
-    }
-    public function login(Request $request)
-    {
-        $this->validate($request, [
-            'admin_email' => 'required|email|max:255',
-            'admin_password' => 'required|max:255'
-        ]);
-        // $data = $request->all();
-
-        if (Auth::attempt(['admin_email' => $request->admin_email, 'admin_password' => $request->admin_password])) {
-            return redirect('/dashboard');
-        } else {
-            return redirect('/login-auth')->with('message', 'Lỗi đăng nhập');
-        }
-    }
+    //đăng kí admin
     public function register(Request $request)
     {
         $this->validation($request);
@@ -50,6 +23,36 @@ class AuthController extends Controller
         $admin->save();
         return redirect('/register-auth')->with('message', 'Đăng ký thành công');
     }
+    public function register_auth()
+    {
+        return view('admin.custom_auth.register');
+    }
+
+    //đăng nhập admin
+    public function login(Request $request)
+    {
+        $this->validate($request, [
+            'admin_email' => 'required|email|max:255',
+            'admin_password' => 'required|max:255'
+        ]);
+        if (Auth::attempt(['admin_email' => $request->admin_email, 'admin_password' => $request->admin_password])) {
+            return redirect('/dashboard');
+        } else {
+            return redirect('/login-auth')->with('message', 'Lỗi đăng nhập');
+        }
+    }
+    public function login_auth()
+    {
+        return view('admin.custom_auth.login_auth');
+    }
+
+    //đăng xuất admin
+    public function logout_auth()
+    {
+        Auth::logout();
+        return redirect('/login-auth')->with('message', 'Đã đăng xuất');
+    }
+
     public function validation($request)
     {
         return $this->validate($request, [

@@ -131,7 +131,7 @@ s
 
 				</div>
 
-				<p style="color:#fff">Mọi chi tiết xin liên hệ website tại : <a target="_blank" href="http://duyanh.com/shopbanhanglaravel">Shop</a>, hoặc liên hệ qua số hotline : 0123456789.Xin cảm ơn quý khách đã đặt hàng shop chúng tôi.</p>
+				<p style="color:#fff">Mọi chi tiết xin liên hệ website tại : <a target="_blank" href="http://duyanh.com/datn">Shop</a>, hoặc liên hệ qua số hotline : 0123456789.Xin cảm ơn quý khách đã đặt hàng shop chúng tôi.</p>
 
 			</div>
 		</div>
