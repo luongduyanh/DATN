@@ -133,15 +133,13 @@ class MailController extends Controller
 
         return view('pages.checkout.new_pass')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post)->with('cate_pro_tabs', $cate_pro_tabs); //1
     }
-    public function mail_example()
-    {
-        return view('pages.send_coupon_vip');
-    }
+
 
     public function mail_order()
     {
         return view('pages.mail.mail_order');
     }
+    
     public function quen_mat_khau(Request $request)
     {
         //category post

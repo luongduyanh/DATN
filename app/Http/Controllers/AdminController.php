@@ -132,28 +132,20 @@ class AdminController extends Controller
         $sub7days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(7)->toDateString();
         $sub365days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(365)->toDateString();
 
-        $dauthang9 = Carbon::now('Asia/Ho_Chi_Minh')->subMonth(2)->startOfMonth()->toDateString();
-        $cuoithang9 = Carbon::now('Asia/Ho_Chi_Minh')->subMonth(2)->endOfMonth()->toDateString();
+
 
 
         $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
 
         if ($data['dashboard_value'] == '7ngay') {
-
             $get = Statistic::whereBetween('order_date', [$sub7days, $now])->orderBy('order_date', 'ASC')->get();
         } elseif ($data['dashboard_value'] == 'thangtruoc') {
-
             $get = Statistic::whereBetween('order_date', [$dau_thangtruoc, $cuoi_thangtruoc])->orderBy('order_date', 'ASC')->get();
         } elseif ($data['dashboard_value'] == 'thangnay') {
-
             $get = Statistic::whereBetween('order_date', [$dauthangnay, $now])->orderBy('order_date', 'ASC')->get();
-        } elseif ($data['dashboard_value'] == 'thang9') {
-
-            $get = Statistic::whereBetween('order_date', [$dauthang9, $cuoithang9])->orderBy('order_date', 'ASC')->get();
         } else {
             $get = Statistic::whereBetween('order_date', [$sub365days, $now])->orderBy('order_date', 'ASC')->get();
         }
-
 
         foreach ($get as $key => $val) {
             $chart_data[] = array(
@@ -164,7 +156,6 @@ class AdminController extends Controller
                 'quantity' => $val->quantity
             );
         }
-
 
         echo $data = json_encode($chart_data);
     }

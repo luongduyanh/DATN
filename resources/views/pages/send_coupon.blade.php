@@ -52,7 +52,7 @@
 	<div class="coupon">
 
 		<div class="container">
-			<h3>Mã khuyến mãi dành cho khách từ shop <a target="_blank" href="https://duyanh.com/datn">duyanh.com</a>
+			<h3>Mã khuyến mãi dành cho khách từ cửa hàng <a target="_blank" href="https://duyanh.com/datn">duyanh.com</a>
 			</h3>
 		</div>
 		<div class="container" style="background-color:white">
@@ -65,11 +65,11 @@
 						@endif
 						cho tổng đơn hàng đặt mua</i></b></h2>
 
-			<p>Quý khách đã từng mua hàng tại shop <a target="_blank" style="color:red" href="http://duyanh.com/datn">duyanh.com</a> nếu đã có tài khoản xin vui lòng <a target="_blank" style="color:red" href="http://duyanh.com/datn/dang-nhap">đăng nhập</a> vào tài khoản để mua hàng và nhập mã code phía dưới để được giảm giá mua hàng ,xin cảm ơn quý khách.Chúc quý khách thật nhiều sức khỏe và bình an trong cuộc sống. </p>
+			<p>Quý khách đã từng mua hàng tại cửa hàng <a target="_blank" style="color:red" href="http://duyanh.com/datn">duyanh.com</a> nếu đã có tài khoản xin vui lòng <a target="_blank" style="color:red" href="http://duyanh.com/datn/dang-nhap">đăng nhập</a> vào tài khoản để mua hàng và nhập mã code phía dưới để được giảm giá mua hàng ,xin cảm ơn quý khách.Chúc quý khách thật nhiều sức khỏe và bình an trong cuộc sống. </p>
 		</div>
 		<div class="container">
-			<p class="code">Sử dụng Code sau: <span class="promo">{{$coupon['coupon_code']}}</span>với chỉ {{$coupon['coupon_time']}} mã giảm giá,nhanh tay kẻo hết.</p>
-			<p class="expire">Ngày bắt đầu : {{$coupon['start_coupon']}} / Ngày hết hạn code: {{$coupon['end_coupon']}}</p>
+			<p class="code">Sử dụng Mã giảm giá sau: <span class="promo">{{$coupon['coupon_code']}}</span>. Với chỉ {{$coupon['coupon_time']}} mã giảm giá, nhanh tay kẻo hết.</p>
+			<p class="expire">Ngày bắt đầu: {{$coupon['start_coupon']}} / Ngày hết hạn: {{$coupon['end_coupon']}}</p>
 		</div>
 
 	</div>

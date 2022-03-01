@@ -89,14 +89,14 @@ Route::get('/all-category-product', 'CategoryProduct@all_category_product');
 
 Route::post('/export-csv', 'CategoryProduct@export_csv');
 Route::post('/import-csv', 'CategoryProduct@import_csv');
-
 Route::post('/arrange-category', 'CategoryProduct@arrange_category');
 
 Route::get('/unactive-category-product/{category_product_id}', 'CategoryProduct@unactive_category_product');
 Route::get('/active-category-product/{category_product_id}', 'CategoryProduct@active_category_product');
 
 Route::post('/product-tabs', 'CategoryProduct@product_tabs');
-
+Route::post('/save-category-product', 'CategoryProduct@save_category_product');
+Route::post('/update-category-product/{category_product_id}', 'CategoryProduct@update_category_product');
 
 
 //login customer by google
@@ -104,8 +104,7 @@ Route::get('/login-customer-google', 'AdminController@login_customer_google');
 Route::get('/customer/google/callback', 'AdminController@callback_customer_google');
 
 
-Route::post('/save-category-product', 'CategoryProduct@save_category_product');
-Route::post('/update-category-product/{category_product_id}', 'CategoryProduct@update_category_product');
+
 
 //Brand Product
 Route::get('/add-brand-product', 'BrandProduct@add_brand_product');
@@ -118,8 +117,9 @@ Route::get('/active-brand-product/{brand_product_id}', 'BrandProduct@active_bran
 
 Route::post('/save-brand-product', 'BrandProduct@save_brand_product');
 Route::post('/update-brand-product/{brand_product_id}', 'BrandProduct@update_brand_product');
-//Category Post
 
+
+//Category Post
 Route::get('/add-category-post', 'CategoryPost@add_category_post');
 Route::get('/all-category-post', 'CategoryPost@all_category_post');
 Route::get('/edit-category-post/{category_post_id}', 'CategoryPost@edit_category_post');
@@ -127,8 +127,9 @@ Route::get('/edit-category-post/{category_post_id}', 'CategoryPost@edit_category
 Route::post('/save-category-post', 'CategoryPost@save_category_post');
 Route::post('/update-category-post/{cate_id}', 'CategoryPost@update_category_post');
 Route::get('/delete-category-post/{cate_id}', 'CategoryPost@delete_category_post');
-//POst
 
+
+//Post
 Route::get('/add-post', 'PostController@add_post');
 Route::get('/all-post', 'PostController@all_post');
 Route::get('/delete-post/{post_id}', 'PostController@delete_post');
@@ -149,6 +150,7 @@ Route::post('/update-product/{product_id}', 'ProductController@update_product');
 Route::post('/delete-document', 'ProductController@delete_document');
 Route::get('/gg-document', 'ProductController@gg_document');
 
+
 //Coupon
 Route::post('/check-coupon', 'CartController@check_coupon');
 Route::get('/unset-coupon', 'CouponController@unset_coupon');
@@ -156,6 +158,7 @@ Route::get('/insert-coupon', 'CouponController@insert_coupon');
 Route::get('/delete-coupon/{coupon_id}', 'CouponController@delete_coupon');
 Route::get('/list-coupon', 'CouponController@list_coupon');
 Route::post('/insert-coupon-code', 'CouponController@insert_coupon_code');
+
 
 //Cart
 Route::post('/update-cart-quantity', 'CartController@update_cart_quantity');
@@ -176,19 +179,19 @@ Route::get('/remove-item', 'CartController@remove_item');
 
 Route::get('/cart-session', 'CartController@cart_session');
 
+
 //Checkout
 Route::get('/dang-nhap', 'CheckoutController@login_checkout');
 Route::get('/del-fee', 'CheckoutController@del_fee');
 
 Route::get('/logout-checkout', 'CheckoutController@logout_checkout');
 Route::post('/add-customer', 'CheckoutController@add_customer');
-Route::post('/order-place', 'CheckoutController@order_place');
 Route::post('/login-customer', 'CheckoutController@login_customer');
 Route::get('/checkout', 'CheckoutController@checkout')->name('checkout');
-Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
 Route::post('/calculate-fee', 'CheckoutController@calculate_fee');
 Route::post('/select-delivery-home', 'CheckoutController@select_delivery_home');
 Route::post('/confirm-order', 'CheckoutController@confirm_order');
+
 
 //Order
 Route::get('/view-history-order/{order_code}', 'OrderController@view_history_order');
@@ -209,6 +212,7 @@ Route::post('/insert-delivery', 'DeliveryController@insert_delivery');
 Route::post('/select-feeship', 'DeliveryController@select_feeship');
 Route::post('/update-delivery', 'DeliveryController@update_delivery');
 
+
 //Banner
 Route::get('/manage-slider', 'SliderController@manage_slider');
 Route::get('/add-slider', 'SliderController@add_slider');
@@ -217,13 +221,14 @@ Route::post('/insert-slider', 'SliderController@insert_slider');
 Route::get('/unactive-slide/{slide_id}', 'SliderController@unactive_slide');
 Route::get('/active-slide/{slide_id}', 'SliderController@active_slide');
 
+
 //Authentication roles
 Route::get('/register-auth', 'AuthController@register_auth');
 Route::get('/login-auth', 'AuthController@login_auth');
 Route::get('/logout-auth', 'AuthController@logout_auth');
-
 Route::post('/register', 'AuthController@register');
 Route::post('/login', 'AuthController@login');
+
 
 //Gallery
 Route::get('add-gallery/{product_id}', 'GalleryController@add_gallery');
@@ -246,16 +251,18 @@ Route::post('watch-video', 'VideoController@watch_video');
 
 
 
-
-
 //Send Mail 
 Route::get('/send-coupon/{coupon_time}/{coupon_condition}/{coupon_number}/{coupon_code}', 'MailController@send_coupon');
-Route::get('/mail-example', 'MailController@mail_example');
 Route::get('/send-mail', 'MailController@send_mail');
 Route::get('/quen-mat-khau', 'MailController@quen_mat_khau');
 Route::get('/update-new-pass', 'MailController@update_new_pass');
 Route::post('/recover-pass', 'MailController@recover_pass');
 Route::post('/reset-new-pass', 'MailController@reset_new_pass');
+
+
+//cong thanh toan truc tuyen
+Route::post('/momo_payment', 'CheckoutController@momo_payment');
+
 
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware'], function () {

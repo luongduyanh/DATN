@@ -28,6 +28,74 @@ use Illuminate\Support\Facades\Mail;
 class CheckoutController extends Controller
 {
 
+  function execPostRequest($url, $data)
+  {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt(
+      $ch,
+      CURLOPT_HTTPHEADER,
+      array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data)
+      )
+    );
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    //execute post
+    $result = curl_exec($ch);
+    //close connection
+    curl_close($ch);
+    return $result;
+  }
+
+  public function momo_payment(Request $request)
+  {
+    $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+
+    $partnerCode = 'MOMOBKUN20180529';
+    $accessKey = 'klm05TvNBzhg7h7j';
+    $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
+    $orderInfo = "Thanh toán qua MoMo";
+    $amount = $_POST['total_momo'];
+    $orderId = time() . "";
+    $redirectUrl = "http://duyanh.com/datn/history";
+    $ipnUrl = "http://duyanh.com/datn/checkout";
+    $extraData = "";
+
+    $requestId = time() . "";
+    $requestType = "payWithATM";
+    $extraData = '';
+    //before sign HMAC SHA256 signature
+    $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
+    $signature = hash_hmac("sha256", $rawHash, $secretKey);
+    $data = array(
+      'partnerCode' => $partnerCode,
+      'partnerName' => "Test",
+      "storeId" => "MomoTestStore",
+      'requestId' => $requestId,
+      'amount' => $amount,
+      'orderId' => $orderId,
+      'orderInfo' => $orderInfo,
+      'redirectUrl' => $redirectUrl,
+      'ipnUrl' => $ipnUrl,
+      'lang' => 'vi',
+      'extraData' => $extraData,
+      'requestType' => $requestType,
+      'signature' => $signature
+    );
+    $result = $this->execPostRequest($endpoint, json_encode($data));
+    $jsonResult = json_decode($result, true);  // decode json
+
+    //Just a example, please check more in there
+    return redirect()->to($jsonResult['payUrl']);
+    //tt the test
+    //NGUYEN VAN A - 9704000000000018 - 03/07 - OTP -0917003003
+  }
+  
+
   public function confirm_order(Request $request)
   {
     $data = $request->all();
@@ -61,17 +129,14 @@ class CheckoutController extends Controller
     $order->order_status = 1;
     $order->order_code = $checkout_code;
     $order->order_destroy = "0";
-
     date_default_timezone_set('Asia/Ho_Chi_Minh');
-
     $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d H:i:s');
-
     $order_date = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');;
     $order->created_at = $today;
     $order->order_date = $order_date;
     $order->save();
 
-
+    //get order details
     if (Session()->get('cart') == true) {
       foreach (Session()->get('cart') as $key => $cart) {
         $order_details = new OrderDetails;
@@ -249,7 +314,7 @@ class CheckoutController extends Controller
     return Redirect::to('/trang-chu');
   }
 
-//khách hàng đăng nhập
+  //khách hàng chon thanh toan
   public function checkout(Request $request)
   {
     //category post
@@ -272,69 +337,7 @@ class CheckoutController extends Controller
   }
 
 
-  public function save_checkout_customer(Request $request)
-  {
-    $data = array();
-    $data['shipping_name'] = $request->shipping_name;
-    $data['shipping_phone'] = $request->shipping_phone;
-    $data['shipping_email'] = $request->shipping_email;
-    $data['shipping_notes'] = $request->shipping_notes;
-    $data['shipping_address'] = $request->shipping_address;
-
-    $shipping_id = DB::table('tbl_shipping')->insertGetId($data);
-
-    Session()->put('shipping_id', $shipping_id);
-
-    return Redirect::to('/payment');
-  }
-
-  public function order_place(Request $request)
-  {
-    //insert payment_method
-    //seo 
-    $meta_desc = "Đăng nhập thanh toán";
-    $meta_keywords = "Đăng nhập thanh toán";
-    $meta_title = "Đăng nhập thanh toán";
-    $url_canonical = $request->url();
-    //--seo 
-    $data = array();
-    $data['payment_method'] = $request->payment_option;
-    $data['payment_status'] = 'Đang chờ xử lý';
-    $payment_id = DB::table('tbl_payment')->insertGetId($data);
-
-    //insert order
-    $order_data = array();
-    $order_data['customer_id'] = Session()->get('customer_id');
-    $order_data['shipping_id'] = Session()->get('shipping_id');
-    $order_data['payment_id'] = $payment_id;
-    $order_data['order_destroy'] = null;
-    $order_data['order_total'] = Cart::total();
-    $order_data['order_status'] = 1;
-    $order_id = DB::table('tbl_order')->insertGetId($order_data);
-
-    //insert order_details
-    $content = Cart::content();
-    foreach ($content as $v_content) {
-      $order_d_data['order_id'] = $order_id;
-      $order_d_data['product_id'] = $v_content->id;
-      $order_d_data['product_name'] = $v_content->name;
-      $order_d_data['product_price'] = $v_content->price;
-      $order_d_data['product_sales_quantity'] = $v_content->qty;
-      DB::table('tbl_order_details')->insert($order_d_data);
-    }
-    if ($data['payment_method'] == 1) {
-
-      echo 'Thanh toán thẻ ATM';
-    } elseif ($data['payment_method'] == 2) {
-      Cart::destroy();
-      $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
-      $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
-      return view('pages.checkout.handcash')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical);
-    } else {
-      echo 'Thẻ ghi nợ';
-    }
-  }
-
+  //khach hang dang xuat
   public function logout_checkout()
   {
     Session()->forget('customer_id');
@@ -344,6 +347,7 @@ class CheckoutController extends Controller
     return Redirect::to('/dang-nhap');
   }
 
+  //khach hang dang nhap
   public function login_customer(Request $request)
   {
 
@@ -364,6 +368,8 @@ class CheckoutController extends Controller
     Session()->save();
   }
 
+
+  //adminPage
   public function manage_order()
   {
     $this->AuthLogin();

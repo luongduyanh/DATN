@@ -17,7 +17,7 @@
       <table class="table table-striped b-t b-light" id="myTable">
         <thead>
           <tr>
-            <th>Duyệt</th>
+            <!-- <th>Duyệt</th> -->
             <th>Tên người gửi</th>
             <th>Bình luận</th>
             <th>Ngày gửi</th>
@@ -29,14 +29,13 @@
           @foreach($comment as $key => $comm)
           <tr>
 
-            <td>
+            <!-- <td>
               @if($comm->comment_status==1)
               <input type="button" data-comment_status="0" data-comment_id="{{$comm->comment_id}}" id="{{$comm->comment_product_id}}" class="btn btn-primary btn-xs comment_duyet_btn" value="Duyệt">
               @else
               <input type="button" data-comment_status="1" data-comment_id="{{$comm->comment_id}}" id="{{$comm->comment_product_id}}" class="btn btn-danger btn-xs comment_duyet_btn" value="Bỏ Duyệt">
               @endif
-
-            </td>
+            </td> -->
             <td>{{ $comm->comment_name }}</td>
 
             <td>{{ $comm->comment }}
@@ -66,8 +65,8 @@
             <td>{{ $comm->comment_date }}</td>
             <td><a href="{{url('/chi-tiet/'.$comm->product->product_slug)}}" target="_blank">{{ $comm->product->product_name }}</a></td>
             <td>
-              <a href="" class="active styling-edit" ui-toggle-class="">
-                <i class="fa fa-pencil-square-o text-success text-active"></i></a>
+              <!-- <a href="" class="active styling-edit" ui-toggle-class="">
+                <i class="fa fa-pencil-square-o text-success text-active"></i></a> -->
               <a onclick="return confirm('Bạn có chắc là muốn xóa bình luận này ko?')" href="" class="active styling-edit" ui-toggle-class="">
                 <i class="fa fa-times text-danger text"></i>
               </a>

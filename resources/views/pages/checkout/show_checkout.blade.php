@@ -96,16 +96,9 @@
 										<option value="">--Chọn xã phường--</option>
 									</select>
 								</div>
-
-
 								<input type="button" value="Tính phí vận chuyển" name="calculate_order" class="btn btn-primary btn-sm calculate_delivery">
-
-
 							</form>
 						</div>
-
-
-
 					</div>
 				</div>
 				<div class="col-sm-12 clearfix">
@@ -172,15 +165,15 @@
 											</p>
 										</td>
 										<td class="cart_delete">
-											@if(!Session()->get('success_paypal') == 1)
+
 											<a class="cart_quantity_delete" href="{{url('/del-product/'.$cart['session_id'])}}"><i class="fa fa-times"></i></a>
-											@endif
+
 										</td>
 									</tr>
 
 									@endforeach
 									<tr>
-										@if(!Session()->get('success_paypal') == 1)
+
 										<td><input type="submit" value="Cập nhật giỏ hàng" name="update_qty" class="check_out btn btn-default btn-sm"></td>
 										<td><a class="btn btn-default check_out" href="{{url('/del-all-product')}}">Xóa tất cả</a></td>
 										<td> <a class="btn btn-primary m-3" href="{{ route('processTransaction') }}">Thanh toán bằng paypal</a></td>
@@ -189,7 +182,7 @@
 											<a class="btn btn-default check_out" href="{{url('/unset-coupon')}}">Xóa mã khuyến mãi</a>
 											@endif
 										</td>
-										@endif
+
 
 										<td colspan="2">
 											<li>Tổng tiền :<span>{{number_format($total,0,',','.')}}đ</span></li>
@@ -283,13 +276,16 @@
 						@if(Session()->get('cart'))
 						<tr>
 							<td>
-								@if(!Session()->get('success_paypal') == 1)
 								<form method="POST" action="{{url('/check-coupon')}}">
 									@csrf
 									<input type="text" class="form-control" name="coupon" placeholder="Nhập mã giảm giá"><br>
 									<input type="submit" class="btn btn-default check_coupon" name="check_coupon" value="Tính mã giảm giá">
 								</form>
-								@endif
+								<form method="POST" action="{{url('/momo_payment')}}">
+									@csrf
+									<input type="hidden" name="total_momo" value="{{$total_after}}">
+									<button type="submit" class="btn btn-default check_out" name="payUrl">Thanh toán MOMO</button>
+								</form>
 							</td>
 						</tr>
 						@endif

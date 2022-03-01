@@ -2,6 +2,7 @@
 @section('content')
 <div class="features_items">
     <!--features_items-->
+    <br>
     <h2 class="title text-center">Kết quả tìm kiếm</h2>
     @foreach($search_product as $key => $product)
     <div class="col-sm-4">

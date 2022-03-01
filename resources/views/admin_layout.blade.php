@@ -485,6 +485,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 labels: ['đơn hàng', 'doanh số', 'lợi nhuận', 'số lượng']
 
             });
+
             function chart60daysorder() {
                 var _token = $('input[name="_token"]').val();
                 $.ajax({

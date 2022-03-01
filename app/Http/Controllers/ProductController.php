@@ -50,6 +50,7 @@ class ProductController extends Controller
 
         return view('admin.images.file_browser')->with($data);
     }
+
     public function reply_comment(Request $request)
     {
         $data = $request->all();
@@ -61,6 +62,7 @@ class ProductController extends Controller
         $comment->comment_name = 'HiếuStore';
         $comment->save();
     }
+
     public function allow_comment(Request $request)
     {
         $data = $request->all();
@@ -68,12 +70,14 @@ class ProductController extends Controller
         $comment->comment_status = $data['comment_status'];
         $comment->save();
     }
+
     public function list_comment()
     {
         $comment = Comment::with('product')->where('comment_parent_comment', '=', 0)->orderBy('comment_id', 'DESC')->get();
         $comment_rep = Comment::with('product')->where('comment_parent_comment', '>', 0)->get();
         return view('admin.comment.list_comment')->with(compact('comment', 'comment_rep'));
     }
+
     public function send_comment(Request $request)
     {
         $product_id = $request->product_id;
@@ -83,10 +87,11 @@ class ProductController extends Controller
         $comment->comment = $comment_content;
         $comment->comment_name = $comment_name;
         $comment->comment_product_id = $product_id;
-        $comment->comment_status = 1;
+        $comment->comment_status = 0;
         $comment->comment_parent_comment = 0;
         $comment->save();
     }
+
     public function load_comment(Request $request)
     {
         $product_id = $request->product_id;
@@ -126,6 +131,7 @@ class ProductController extends Controller
         }
         echo $output;
     }
+
     public function local_storage()
     {
         return view('pages.local_storage.storage');
@@ -178,7 +184,7 @@ class ProductController extends Controller
         $brand_product = DB::table('tbl_brand')->orderby('brand_id', 'desc')->get();
 
 
-        return view('admin.add_product')->with('cate_product', $cate_product)->with('brand_product', $brand_product);
+        return view('admin.product.add_product')->with('cate_product', $cate_product)->with('brand_product', $brand_product);
     }
     public function all_product()
     {
@@ -187,9 +193,10 @@ class ProductController extends Controller
             ->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')
             ->join('tbl_brand', 'tbl_brand.brand_id', '=', 'tbl_product.brand_id')
             ->orderby('tbl_product.product_id', 'desc')->get();
-        $manager_product  = view('admin.all_product')->with('all_product', $all_product);
-        return view('admin_layout')->with('admin.all_product', $manager_product);
+        $manager_product  = view('admin.product.all_product')->with('all_product', $all_product);
+        return view('admin_layout')->with('admin.product.all_product', $manager_product);
     }
+
     public function save_product(Request $request)
     {
         $this->AuthLogin();
@@ -250,14 +257,14 @@ class ProductController extends Controller
     {
         $this->AuthLogin();
         DB::table('tbl_product')->where('product_id', $product_id)->update(['product_status' => 1]);
-        Session()->put('message', 'Không kích hoạt sản phẩm thành công');
+        Session()->put('message', 'Đã hiển thị sản phẩm');
         return Redirect::to('all-product');
     }
     public function active_product($product_id)
     {
         $this->AuthLogin();
         DB::table('tbl_product')->where('product_id', $product_id)->update(['product_status' => 0]);
-        Session()->put('message', 'Không kích hoạt sản phẩm thành công');
+        Session()->put('message', 'Đã ẩn sản phẩm');
         return Redirect::to('all-product');
     }
     public function edit_product($product_id)
@@ -268,9 +275,9 @@ class ProductController extends Controller
 
         $edit_product = DB::table('tbl_product')->where('product_id', $product_id)->get();
 
-        $manager_product  = view('admin.edit_product')->with('edit_product', $edit_product)->with('cate_product', $cate_product)->with('brand_product', $brand_product);
+        $manager_product  = view('admin.product.edit_product')->with('edit_product', $edit_product)->with('cate_product', $cate_product)->with('brand_product', $brand_product);
 
-        return view('admin_layout')->with('admin.edit_product', $manager_product);
+        return view('admin_layout')->with('admin.product.edit_product', $manager_product);
     }
     public function update_product(Request $request, $product_id)
     {
@@ -345,7 +352,7 @@ class ProductController extends Controller
         return Redirect::to('all-product');
     }
     //End Admin Page
-    
+
     public function details_product($product_slug, Request $request)
     {
         //category post
@@ -412,7 +419,7 @@ class ProductController extends Controller
         $url_canonical = $request->url();
         return view('pages.sanpham.tag')->with('slider', $slider)->with('category_post', $category_post)->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('product_tag', $product_tag)->with('pro_tag', $pro_tag);
     }
-    
+
     public function insert_rating(Request $request)
     {
         $data = $request->all();

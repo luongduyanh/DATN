@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Coupon;
 use Carbon\Carbon;
 use Session;
+use DateTime;
 use Illuminate\Support\Facades\Redirect;
 
 session_start();
@@ -45,8 +46,8 @@ class CouponController extends Controller
 		$coupon = new Coupon;
 
 		$coupon->coupon_name = $data['coupon_name'];
-		$coupon->coupon_date_start = $data['coupon_date_start'];
-		$coupon->coupon_date_end = $data['coupon_date_end'];
+		$coupon->coupon_date_start = date_format(DateTime::createFromFormat("d/m/Y", $data['coupon_date_start']), "Y/m/d");
+		$coupon->coupon_date_end = date_format(DateTime::createFromFormat("d/m/Y", $data['coupon_date_end']), "Y/m/d");
 		$coupon->coupon_number = $data['coupon_number'];
 		$coupon->coupon_code = $data['coupon_code'];
 		$coupon->coupon_time = $data['coupon_time'];

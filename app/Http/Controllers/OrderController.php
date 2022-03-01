@@ -40,6 +40,7 @@ class OrderController extends Controller
 		Session()->put('message', 'Xóa đơn hàng thành công');
 		return redirect()->back();
 	}
+	
 	public function update_qty(Request $request)
 	{
 		$data = $request->all();
@@ -47,6 +48,7 @@ class OrderController extends Controller
 		$order_details->product_sales_quantity = $data['order_qty'];
 		$order_details->save();
 	}
+
 	public function update_order_qty(Request $request)
 	{
 		//update order
@@ -177,9 +179,9 @@ class OrderController extends Controller
 	{
 		$pdf = App::make('dompdf.wrapper');
 		$pdf->loadHTML($this->print_order_convert($checkout_code));
-
 		return $pdf->stream();
 	}
+
 	public function print_order_convert($checkout_code)
 	{
 		$order_details = OrderDetails::where('order_code', $checkout_code)->get();
@@ -222,13 +224,16 @@ class OrderController extends Controller
 		}
 		.table-styling{
 			border:1px solid #000;
+			width:100%
 		}
 		.table-styling tbody tr td{
 			border:1px solid #000;
 		}
 		</style>
-		<h1><centerCông ty TNHH một thành viên ABCD</center></h1>
-		<h4><center>Độc lập - Tự do - Hạnh phúc</center></h4>
+		<h6>Đơn vị:	 Công ty DUYANH.COM</h6>
+		<h6>Địa chỉ: số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội</h6>
+		<h1><center>Phiếu giao hàng</center></h1>
+		<br>
 		<p>Người đặt hàng</p>
 		<table class="table-styling">
 		<thead>
@@ -254,13 +259,13 @@ class OrderController extends Controller
 
 		</table>
 
-		<p>Ship hàng tới</p>
+		<p>Địa chỉ giao hàng</p>
 		<table class="table-styling">
 		<thead>
 		<tr>
 		<th>Tên người nhận</th>
 		<th>Địa chỉ</th>
-		<th>Sdt</th>
+		<th>Số điện thoại</th>
 		<th>Email</th>
 		<th>Ghi chú</th>
 		</tr>
@@ -283,13 +288,13 @@ class OrderController extends Controller
 
 		</table>
 
-		<p>Đơn hàng đặt</p>
+		<p>Chi tiết đơn hàng</p>
 		<table class="table-styling">
 		<thead>
 		<tr>
 		<th>Tên sản phẩm</th>
 		<th>Mã giảm giá</th>
-		<th>Phí ship</th>
+		<th>Phí vận chuyển</th>
 		<th>Số lượng</th>
 		<th>Giá sản phẩm</th>
 		<th>Thành tiền</th>
@@ -307,7 +312,7 @@ class OrderController extends Controller
 			if ($product->product_coupon != 'no') {
 				$product_coupon = $product->product_coupon;
 			} else {
-				$product_coupon = 'không mã';
+				$product_coupon = 'không';
 			}
 
 			$output .= '		
@@ -330,9 +335,9 @@ class OrderController extends Controller
 		}
 
 		$output .= '<tr>
-		<td colspan="2">
+		<td colspan="3">
 		<p>Tổng giảm: ' . $coupon_echo . '</p>
-		<p>Phí ship: ' . number_format($product->product_feeship, 0, ',', '.') . 'đ' . '</p>
+		<p>Phí vận chuyển: ' . number_format($product->product_feeship, 0, ',', '.') . 'đ' . '</p>
 		<p>Thanh toán : ' . number_format($total_coupon + $product->product_feeship, 0, ',', '.') . 'đ' . '</p>
 		</td>
 		</tr>';
@@ -340,14 +345,12 @@ class OrderController extends Controller
 		</tbody>
 
 		</table>
-
-		<p>Ký tên</p>
-		<table>
+		<br><br><br>
+		<table class="table-styling" style="border:none">
 		<thead>
 		<tr>
-		<th width="200px">Người lập phiếu</th>
-		<th width="800px">Người nhận</th>
-
+		<th width="">Người lập phiếu</th>
+		<th width="">Người nhận</th>
 		</tr>
 		</thead>
 		<tbody>';
@@ -362,6 +365,7 @@ class OrderController extends Controller
 
 		return $output;
 	}
+
 	public function view_order($order_code)
 	{
 		$order_details = OrderDetails::with('product')->where('order_code', $order_code)->get();
@@ -389,19 +393,20 @@ class OrderController extends Controller
 			$coupon_number = 0;
 		}
 
-		return view('admin.view_order')->with(compact('order_details', 'customer', 'shipping', 'coupon_condition', 'coupon_number', 'getorder', 'order_status'));
+		return view('admin.order.view_order')->with(compact('order_details', 'customer', 'shipping', 'coupon_condition', 'coupon_number', 'getorder', 'order_status'));
 	}
+
 	public function manage_order()
 	{
 		$getorder = Order::orderby('order_id', 'DESC')->paginate(5);
-		return view('admin.manage_order')->with(compact('getorder'));
+		return view('admin.order.manage_order')->with(compact('getorder'));
 	}
+
 	public function history(Request $request)
 	{
 		if (!Session()->get('customer_id')) {
 			return redirect('dang-nhap')->with('error', 'Vui lòng đăng nhập để xem lịch sử mua hàng');
 		} else {
-
 
 			//category post
 			$category_post = CatePost::orderBy('cate_post_id', 'DESC')->get();
@@ -424,6 +429,7 @@ class OrderController extends Controller
 			return view('pages.history.history')->with('category', $cate_product)->with('brand', $brand_product)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post)->with('getorder', $getorder); //1
 		}
 	}
+
 	public function view_history_order(Request $request, $order_code)
 	{
 		if (!Session()->get('customer_id')) {

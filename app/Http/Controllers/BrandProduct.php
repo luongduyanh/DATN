@@ -11,6 +11,7 @@ use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
+use App\Product;
 
 session_start();
 class BrandProduct extends Controller
@@ -30,17 +31,18 @@ class BrandProduct extends Controller
             return Redirect::to('login-auth')->send();
         }
     }
+
     public function add_brand_product()
     {
         $this->AuthLogin();
-        return view('admin.add_brand_product');
+        return view('admin.brand.add_brand_product');
     }
     public function all_brand_product()
     {
         $this->AuthLogin();
-        $all_brand_product = Brand::orderBy('brand_id', 'DESC')->paginate(2);
-        $manager_brand_product  = view('admin.all_brand_product')->with('all_brand_product', $all_brand_product);
-        return view('admin_layout')->with('admin.all_brand_product', $manager_brand_product);
+        $all_brand_product = Brand::orderBy('brand_id', 'DESC')->get();
+        $manager_brand_product  = view('admin.brand.all_brand_product')->with('all_brand_product', $all_brand_product);
+        return view('admin_layout')->with('admin.brand.all_brand_product', $manager_brand_product);
     }
     public function save_brand_product(Request $request)
     {
@@ -78,9 +80,9 @@ class BrandProduct extends Controller
 
         // $edit_brand_product = DB::table('tbl_brand')->where('brand_id',$brand_product_id)->get();
         $edit_brand_product = Brand::where('brand_id', $brand_product_id)->get();
-        $manager_brand_product  = view('admin.edit_brand_product')->with('edit_brand_product', $edit_brand_product);
+        $manager_brand_product  = view('admin.brand.edit_brand_product')->with('edit_brand_product', $edit_brand_product);
 
-        return view('admin_layout')->with('admin.edit_brand_product', $manager_brand_product);
+        return view('admin_layout')->with('admin.brand.edit_brand_product', $manager_brand_product);
     }
 
     public function update_brand_product(Request $request, $brand_product_id)
@@ -134,6 +136,34 @@ class BrandProduct extends Controller
             $meta_title = $val->brand_name;
             $url_canonical = $request->url();
             //--seo
+            $brand_id = $val->brand_id;
+        }
+
+        if (isset($_GET['sort_by'])) {
+
+            $sort_by = $_GET['sort_by'];
+
+            if ($sort_by == 'giam_dan') {
+
+                $brand_by_id = Product::with('brand')->where('brand_id', $brand_id)->orderBy('product_price', 'DESC')->paginate(6)->appends(request()->query());
+            } elseif ($sort_by == 'tang_dan') {
+
+                $brand_by_id = Product::with('brand')->where('brand_id', $brand_id)->orderBy('product_price', 'ASC')->paginate(6)->appends(request()->query());
+            } elseif ($sort_by == 'kytu_za') {
+
+                $brand_by_id = Product::with('brand')->where('brand_id', $brand_id)->orderBy('product_name', 'DESC')->paginate(6)->appends(request()->query());
+            } elseif ($sort_by == 'kytu_az') {
+
+                $brand_by_id = Product::with('brand')->where('brand_id', $brand_id)->orderBy('product_name', 'ASC')->paginate(6)->appends(request()->query());
+            }
+        } elseif (isset($_GET['start_price']) && $_GET['end_price']) {
+
+            $min_price = $_GET['start_price'];
+            $max_price = $_GET['end_price'];
+
+            $brand_by_id = Product::with('brand')->whereBetween('product_price', [$min_price, $max_price])->orderBy('product_price', 'ASC')->paginate(6);
+        } else {
+            $brand_by_id = Product::with('brand')->where('brand_id', $brand_id)->orderBy('product_id', 'DESC')->paginate(6);
         }
 
         return view('pages.brand.show_brand')->with('category', $cate_product)->with('brand', $brand_product)->with('brand_by_id', $brand_by_id)->with('brand_name', $brand_name)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post);
