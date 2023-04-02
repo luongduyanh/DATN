@@ -18,17 +18,11 @@ class BrandProduct extends Controller
 {
     public function AuthLogin()
     {
-
-        if (Session()->get('login_normal')) {
-
-            $admin_id = Session()->get('admin_id');
-        } else {
-            $admin_id = Auth::id();
-        }
+        $admin_id = Session()->get('admin_id');
         if ($admin_id) {
             return Redirect::to('dashboard');
         } else {
-            return Redirect::to('login-auth')->send();
+            return Redirect::to('admin')->send();
         }
     }
 

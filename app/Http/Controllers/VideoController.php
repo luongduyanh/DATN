@@ -16,11 +16,7 @@ class VideoController extends Controller
 {
 	public function AuthLogin()
 	{
-		if (Session()->get('login_normal')) {
-			$admin_id = Session()->get('admin_id');
-		} else {
-			$admin_id = Auth::id();
-		}
+		$admin_id = Session()->get('admin_id');
 		if ($admin_id) {
 			return Redirect::to('dashboard');
 		} else {
@@ -200,7 +196,7 @@ class VideoController extends Controller
 		return view('pages.video.video')->with('category', $cate_product)->with('brand', $brand_product)->with('all_video', $all_video)->with('meta_desc', $meta_desc)->with('meta_keywords', $meta_keywords)->with('meta_title', $meta_title)->with('url_canonical', $url_canonical)->with('slider', $slider)->with('category_post', $category_post); //1
 		// return view('pages.home')->with(compact('cate_product','brand_product','all_product')); //2
 
-		
+
 	}
 	public function watch_video(Request $request)
 	{

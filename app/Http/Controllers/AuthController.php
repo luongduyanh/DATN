@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Admin;
+use App\Login;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -35,10 +36,17 @@ class AuthController extends Controller
             'admin_email' => 'required|email|max:255',
             'admin_password' => 'required|max:255'
         ]);
-        if (Auth::attempt(['admin_email' => $request->admin_email, 'admin_password' => $request->admin_password])) {
-            return redirect('/dashboard');
+        $login = Login::where('admin_email', $request->admin_email)->where('admin_password', md5($request->admin_password))->first();
+        if ($login) {
+            $login_count = $login->count();
+            if ($login_count > 0) {
+                Session()->put('admin_name', $login->admin_name);
+                Session()->put('admin_id', $login->admin_id);
+                return Redirect()->to('/dashboard');
+            }
         } else {
-            return redirect('/login-auth')->with('message', 'Lỗi đăng nhập');
+            Session()->put('message', 'Mật khẩu hoặc tài khoản bị sai.Làm ơn nhập lại');
+            return Redirect()->to('/admin');
         }
     }
     public function login_auth()
@@ -50,7 +58,7 @@ class AuthController extends Controller
     public function logout_auth()
     {
         Auth::logout();
-        return redirect('/login-auth')->with('message', 'Đã đăng xuất');
+        return redirect('/admin')->with('message', 'Đã đăng xuất');
     }
 
     public function validation($request)

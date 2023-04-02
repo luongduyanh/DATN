@@ -87,11 +87,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             <span class="username">
 
                                 <?php
-                                if (Session()->get('login_normal')) {
+                                if (Session()->get('admin_name')) {
 
                                     $name = Session()->get('admin_name');
                                 } else {
-                                    $name = Auth::user()->admin_name;
+                                    $name = 'admin';
                                 }
 
                                 if ($name) {
